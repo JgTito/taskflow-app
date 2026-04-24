@@ -1,59 +1,166 @@
-# TaskFlow
+# 🚀 TaskFlow App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.1.
+Aplicación web desarrollada con **Angular** para la gestión de tareas, que consume la API **TaskFlowAPI**. Permite administrar tareas con jerarquía (padre-hijo), aplicar filtros, ordenamiento, paginación y realizar operaciones CRUD.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🧠 Descripción
 
-```bash
+TaskFlow App es el frontend del sistema TaskFlow, diseñado para interactuar con una API REST y permitir al usuario:
+
+- Visualizar tareas
+- Crear, editar y eliminar tareas
+- Organizar tareas en subtareas
+- Filtrar y ordenar resultados
+- Autenticarse mediante JWT
+
+---
+
+## ⚙️ Tecnologías utilizadas
+
+- Angular 21
+- TypeScript
+- Angular Signals
+- Angular Material
+- TailwindCSS
+- RxJS
+- HttpClient
+
+---
+
+## 🔐 Autenticación
+
+La aplicación consume endpoints protegidos mediante JWT.
+
+- Login de usuario
+- Almacenamiento de token
+- Envío del token en cada request al backend
+
+---
+
+## 📦 Funcionalidades principales
+
+### 📝 Gestión de tareas
+
+- Crear tareas mediante modal
+- Editar tareas reutilizando el mismo modal
+- Eliminar tareas con confirmación
+- Ver detalle de tarea en modal
+
+---
+
+### 🌳 Jerarquía de tareas
+
+- Visualización de tareas padre e hijas
+- Soporte de múltiples niveles de subtareas
+
+---
+
+### 🔍 Filtros dinámicos
+
+Se pueden aplicar filtros por:
+
+- Nombre
+- Estado
+- Prioridad
+
+---
+
+### 🔽 Ordenamiento
+
+- Ordenar por distintos campos
+- Selección de dirección (ascendente / descendente)
+
+---
+
+### 📊 Paginación
+
+- Control de página
+- Cantidad de registros por página
+- Integración con backend mediante headers
+
+---
+
+### 🎨 Interfaz
+
+- Diseño con TailwindCSS
+- Componentes con Angular Material
+- Uso de modales para:
+  - Crear tareas
+  - Editar tareas
+  - Ver detalle
+  - Confirmar eliminación
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+src/
+ ├── app/
+ │    ├── tareas/
+ │    ├── seguridad/
+ │    ├── compartidos/
+ │    └── ...
+```
+
+---
+
+## 🚀 Servidor de desarrollo
+
+Para iniciar el servidor local:
+
+```
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Luego abrir en el navegador:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+http://localhost:4200/
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
+## 🏗 Build
+
+Para compilar el proyecto:
+
 ```
-
-## Building
-
-To build the project run:
-
-```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Los archivos se generan en:
 
-## Running unit tests
+```
+dist/
+```
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+---
 
-```bash
+## 🧪 Tests
+
+Ejecutar pruebas unitarias:
+
+```
 ng test
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## 🔗 Integración
 
-```bash
-ng e2e
-```
+Este proyecto está diseñado para trabajar junto a:
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+👉 **TaskFlowAPI (backend en ASP.NET Core)**
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 👨‍💻 Autor
+
+Proyecto desarrollado como práctica de frontend enfocado en:
+
+- Consumo de APIs REST
+- Manejo de estado con Angular Signals
+- Diseño de interfaces modernas
+- Implementación de funcionalidades reales de negocio
