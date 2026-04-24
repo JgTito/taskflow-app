@@ -1,0 +1,33 @@
+@if (abierto()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    
+    <!-- overlay -->
+    <div class="absolute inset-0 bg-black/50" (click)="cancelar()"></div>
+
+    <!-- modal -->
+    <div class="relative z-10 w-full max-w-md rounded-2xl bg-white shadow-2xl p-6">
+
+      <h2 class="text-xl font-semibold text-slate-800 mb-2">
+        {{ titulo() }}
+      </h2>
+
+      <p class="text-slate-600 mb-6">
+        {{ mensaje() }}
+      </p>
+
+      <div class="flex justify-end gap-3">
+        <button
+          class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-100"
+          (click)="cancelar()">
+          Cancelar
+        </button>
+
+        <button
+          class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+          (click)="confirmar()">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+}

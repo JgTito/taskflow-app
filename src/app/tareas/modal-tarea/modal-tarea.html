@@ -1,0 +1,150 @@
+@if (abierto()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div
+      class="absolute inset-0 bg-black/50"
+      (click)="cerrar()">
+    </div>
+
+    <div class="relative z-10 w-full max-w-2xl rounded-2xl bg-white shadow-2xl">
+      <div class="flex items-center justify-between border-b px-6 py-4">
+       <h2 class="text-xl font-semibold text-slate-800">{{ titulo }}</h2>
+
+        <button
+          type="button"
+          class="rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+          (click)="cerrar()">
+          ✕
+        </button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="guardar()" class="p-6 space-y-5">
+        @if (errores().length > 0) {
+          <div class="rounded-lg border border-red-200 bg-red-50 p-4">
+            <ul class="list-disc pl-5 text-sm text-red-700">
+              @for (error of errores(); track $index) {
+                <li>{{ error }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="md:col-span-2">
+            <label class="mb-1 block text-sm font-medium text-slate-700">Nombre</label>
+            <input
+              type="text"
+              formControlName="nombre"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+
+            @if (form.controls.nombre.touched && form.controls.nombre.invalid) {
+              <p class="mt-1 text-sm text-red-600">El nombre es requerido.</p>
+            }
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="mb-1 block text-sm font-medium text-slate-700">Descripción</label>
+            <textarea
+              rows="3"
+              formControlName="descripcion"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"></textarea>
+
+            @if (form.controls.descripcion.touched && form.controls.descripcion.invalid) {
+              <p class="mt-1 text-sm text-red-600">La descripción es requerida.</p>
+            }
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-slate-700">Fecha límite</label>
+            <input
+              type="date"
+              formControlName="fechaLimite"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+
+            @if (form.controls.fechaLimite.touched && form.controls.fechaLimite.invalid) {
+              <p class="mt-1 text-sm text-red-600">La fecha límite es requerida.</p>
+            }
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-slate-700">Fecha término real</label>
+            <input
+              type="date"
+              formControlName="fechaTerminoReal"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-slate-700">Estado</label>
+            <select
+              formControlName="idEstadoTarea"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+              <option value="">Seleccione un estado</option>
+              @for (estado of estados(); track estado.idEstadoTarea) {
+                <option [value]="estado.idEstadoTarea">{{ estado.nombre }}</option>
+              }
+            </select>
+
+            @if (form.controls.idEstadoTarea.touched && form.controls.idEstadoTarea.invalid) {
+              <p class="mt-1 text-sm text-red-600">El estado es requerido.</p>
+            }
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-slate-700">Prioridad</label>
+            <select
+              formControlName="idPrioridadTarea"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+              <option value="">Seleccione una prioridad</option>
+              @for (prioridad of prioridades(); track prioridad.idPrioridadTarea) {
+                <option [value]="prioridad.idPrioridadTarea">{{ prioridad.nombre }}</option>
+              }
+            </select>
+
+            @if (form.controls.idPrioridadTarea.touched && form.controls.idPrioridadTarea.invalid) {
+              <p class="mt-1 text-sm text-red-600">La prioridad es requerida.</p>
+            }
+          </div>
+
+          <div class="md:col-span-2 relative">
+            <label class="mb-1 block text-sm font-medium text-slate-700">Tarea padre</label>
+
+            <input
+              type="text"
+              formControlName="tareaPadreTexto"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              placeholder="Escribe para buscar una tarea padre" />
+
+            @if (tareasPadreSugeridas().length > 0) {
+              <div class="absolute z-50 mt-1 w-full rounded-lg border border-slate-200 bg-white shadow-lg max-h-56 overflow-y-auto">
+                @for (tareaPadre of tareasPadreSugeridas(); track tareaPadre.idTarea) {
+                  <button
+                    type="button"
+                    class="block w-full px-3 py-2 text-left hover:bg-slate-100"
+                    (click)="seleccionarTareaPadre(tareaPadre)">
+                    {{ tareaPadre.nombre }}
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 border-t pt-4">
+          <button
+            type="button"
+            class="rounded-lg border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-50"
+            (click)="cerrar()">
+            Cancelar
+          </button>
+
+         <button
+          type="submit"
+          class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          [disabled]="form.invalid">
+          {{ modo() === 'crear' ? 'Guardar' : 'Actualizar' }}
+        </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

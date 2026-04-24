@@ -1,0 +1,281 @@
+<div class="w-full px-6 py-4">
+ <div class="mb-6 space-y-4">
+  <div class="flex items-center justify-between">
+    <h2 class="text-3xl font-bold text-slate-800">Mis tareas</h2>
+
+    <button
+      type="button"
+      class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition shadow-sm"
+      (click)="abrirModalCrear()">
+      Nueva tarea
+    </button>
+  </div>
+
+ <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
+    
+    <div>
+      <label class="mb-1 block text-sm font-medium text-slate-700">
+        Buscar por nombre
+      </label>
+      <input
+        #inputNombre
+        type="text"
+        placeholder="Ej: Informe, Reunión, Comprar..."
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+        (input)="cambiarNombre(inputNombre.value)" />
+    </div>
+
+    <div>
+      <label class="mb-1 block text-sm font-medium text-slate-700">
+        Estado
+      </label>
+      <select
+        #selectEstado
+        (change)="cambiarEstado(+selectEstado.value)"
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+        <option value="">Todos los estados</option>
+        @for (estado of estados(); track estado.idEstadoTarea) {
+          <option [value]="estado.idEstadoTarea">{{ estado.nombre }}</option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label class="mb-1 block text-sm font-medium text-slate-700">
+        Prioridad
+      </label>
+      <select
+        #selectPrioridad
+        (change)="cambiarPrioridad(+selectPrioridad.value)"
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+        <option value="">Todas las prioridades</option>
+        @for (prioridad of prioridades(); track prioridad.idPrioridadTarea) {
+          <option [value]="prioridad.idPrioridadTarea">{{ prioridad.nombre }}</option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label class="mb-1 block text-sm font-medium text-slate-700">
+        Ordenar por
+      </label>
+      <select
+        #selectOrdenar
+        (change)="cambiarOrdenarPor(selectOrdenar.value)"
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+        <option value="">-</option>
+        @for (ordenar of ordenarPor(); track ordenar.valor) {
+          <option [value]="ordenar.valor">{{ ordenar.campoNombre }}</option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label class="mb-1 block text-sm font-medium text-slate-700">
+        Dirección orden
+      </label>
+      <select
+        #selectDireccion
+        (change)="cambiarDireccionOrden(selectDireccion.value)"
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+        <option value="">-</option>
+        @for (direccion of direccionOrden(); track direccion.valor) {
+          <option [value]="direccion.valor">{{ direccion.campoNombre }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="mt-4 flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-sm text-slate-500">
+      Usa los filtros para encontrar tareas más rápido.
+    </p>
+
+    <button
+      type="button"
+      class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:border-slate-400"
+      (click)="limpiarFiltros(inputNombre, selectEstado, selectPrioridad, selectOrdenar, selectDireccion)">
+      Limpiar filtros
+    </button>
+  </div>
+</div>
+</div>
+
+  @if (tareas().length === 0) {
+    <div class="bg-white rounded-2xl shadow p-8 text-center text-slate-500">
+      No tienes tareas registradas.
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (tarea of tareas(); track tarea.idTarea) {
+        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+
+          <div class="p-5 border-b border-slate-100 bg-slate-50">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-xl font-semibold text-slate-800">
+                  {{ tarea.nombre }}
+                </h3>
+                <p class="text-slate-600 mt-1">
+                  {{ tarea.descripcion }}
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-2 items-end">
+                <span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                  Estado: {{ tarea.estadoNombre }}
+                </span>
+                <span class="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+                  Prioridad: {{ tarea.prioridadNombre }}
+                </span>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-3 mt-4 text-sm text-slate-500">
+              <span class="bg-slate-100 px-3 py-1 rounded-full">
+                📅 Límite: {{ tarea.fechaLimite }}
+              </span>
+
+              @if (tarea.fechaTerminoReal) {
+                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                  ✅ Terminada: {{ tarea.fechaTerminoReal }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="p-5 space-y-5">
+            @if (tarea.tareaPadre) {
+              <div class="rounded-xl border border-blue-200 bg-blue-50 p-4">
+                <p class="text-sm font-semibold text-blue-800 mb-2">
+                  Tarea padre
+                </p>
+
+                <div class="rounded-lg bg-white p-3 border border-blue-100">
+                  <h4 class="font-medium text-slate-800">
+                    {{ tarea.tareaPadre.nombre }}
+                  </h4>
+                  <p class="text-sm text-slate-600 mt-1">
+                    {{ tarea.tareaPadre.descripcion }}
+                  </p>
+                  <p class="text-xs text-slate-500 mt-2">
+                    📅 {{ tarea.tareaPadre.fechaLimite }}
+                  </p>
+                </div>
+              </div>
+            }
+
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="text-lg font-semibold text-slate-700">
+                  Subtareas
+                </h4>
+
+                <span class="text-sm text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+                  {{ tarea.subTareas.length }} subtarea(s)
+                </span>
+              </div>
+
+              @if (tarea.subTareas.length > 0) {
+                <div class="grid gap-3">
+                  @for (subTarea of tarea.subTareas; track subTarea.idTarea) {
+                    <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 hover:bg-slate-100 transition">
+                      <div class="flex items-start justify-between gap-4">
+                        <div>
+                          <h5 class="font-medium text-slate-800">
+                            {{ subTarea.nombre }}
+                          </h5>
+                          <p class="text-sm text-slate-600 mt-1">
+                            {{ subTarea.descripcion }}
+                          </p>
+                        </div>
+
+                        <div class="flex flex-col gap-2 items-end">
+                          <span class="px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+                            Estado: {{ subTarea.estadoNombre }}
+                          </span>
+                          <span class="px-2 py-1 rounded-full text-xs font-medium bg-pink-100 text-pink-700">
+                            Prioridad: {{ subTarea.prioridadNombre }}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="flex flex-wrap gap-2 mt-3 text-xs text-slate-500">
+                        <span class="bg-white border border-slate-200 px-2 py-1 rounded-full">
+                          📅 {{ subTarea.fechaLimite }}
+                        </span>
+
+                        @if (subTarea.fechaTerminoReal) {
+                          <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                            ✅ {{ subTarea.fechaTerminoReal }}
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-5 text-center text-slate-400">
+                  Esta tarea no tiene subtareas
+                </div>
+              }
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2">
+              <button
+                class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+                (click)="abrirDetalle(tarea)">
+                Ver
+              </button>
+              <button
+              class="px-4 py-2 rounded-lg bg-amber-500 text-white hover:bg-amber-600 transition"
+              (click)="abrirModalEditar(tarea)">
+               Editar
+              </button>
+              <button
+                class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
+                (click)="confirmarEliminar(tarea.idTarea)">
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="mt-6">
+    <mat-paginator
+      showFirstLastButtons
+      [length]="cantidadTotalRegistros"
+      [pageIndex]="paginacion.pagina - 1"
+      [pageSize]="paginacion.recordsPorPagina"
+      [pageSizeOptions]="[6, 12, 24]"
+      class="mat-elevation-z8"
+      (page)="actualizarPaginacion($event)">
+    </mat-paginator>
+  </div>
+</div>
+
+<app-modal-tarea
+  [abierto]="mostrarModal()"
+  [modo]="modoModal()"
+  [tarea]="tareaSeleccionada()"
+  (cerrado)="cerrarModal()"
+  (tareaGuardada)="tareaGuardada()">
+</app-modal-tarea>
+
+<app-modal-confirmacion
+  [abierto]="mostrarConfirmacion()"
+  titulo="Eliminar tarea"
+  mensaje="Esta acción no se puede deshacer"
+  (confirmado)="eliminarConfirmado()"
+  (cancelado)="cancelarEliminar()">
+</app-modal-confirmacion>
+
+<app-modal-detalle-tarea
+  [abierto]="mostrarModalDetalle()"
+  [tarea]="tareaDetalleSeleccionada()"
+  (cerrado)="cerrarDetalle()">
+</app-modal-detalle-tarea>

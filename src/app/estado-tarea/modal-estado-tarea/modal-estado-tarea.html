@@ -1,0 +1,61 @@
+@if (abierto()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div
+      class="absolute inset-0 bg-black/50"
+      (click)="cerrar()">
+    </div>
+
+    <div class="relative z-10 w-full max-w-lg rounded-2xl bg-white shadow-2xl">
+      <div class="flex items-center justify-between border-b px-6 py-4">
+        <h2 class="text-xl font-semibold text-slate-800">{{ titulo }}</h2>
+
+        <button
+          type="button"
+          class="rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+          (click)="cerrar()">
+          ✕
+        </button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="guardar()" class="p-6 space-y-5">
+        @if (errores().length > 0) {
+          <div class="rounded-lg border border-red-200 bg-red-50 p-4">
+            <ul class="list-disc pl-5 text-sm text-red-700">
+              @for (error of errores(); track $index) {
+                <li>{{ error }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700">Nombre</label>
+          <input
+            type="text"
+            formControlName="nombre"
+            class="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+
+          @if (form.controls.nombre.touched && form.controls.nombre.invalid) {
+            <p class="mt-1 text-sm text-red-600">El nombre es requerido.</p>
+          }
+        </div>
+
+        <div class="flex justify-end gap-3 border-t pt-4">
+          <button
+            type="button"
+            class="rounded-lg border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-50"
+            (click)="cerrar()">
+            Cancelar
+          </button>
+
+          <button
+            type="submit"
+            class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            [disabled]="form.invalid">
+            {{ modo() === 'crear' ? 'Guardar' : 'Actualizar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

@@ -1,0 +1,31 @@
+<div class="contenedor-login">
+  <div class="card-login">
+
+    <h2>{{titulo()}}</h2>
+
+    <app-mostrar-errores [errores]="errores()"></app-mostrar-errores>
+
+    <form (submit)="guardarCambios()" [formGroup]="form">
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <mat-icon matPrefix>email</mat-icon>
+        <input matInput formControlName="email" />
+        <mat-error>{{obtenerMensajeErrorEmail()}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <mat-icon matPrefix>lock</mat-icon>
+        <input matInput type="password" formControlName="password" />
+        <mat-error>{{obtenerMensajeErrorPassword()}}</mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+        {{titulo()}}
+      </button>
+
+    </form>
+
+  </div>
+</div>

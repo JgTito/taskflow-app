@@ -1,0 +1,191 @@
+@if (abierto() && tarea()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div
+      class="absolute inset-0 bg-black/60"
+      (click)="cerrar()">
+    </div>
+
+    <div class="relative z-10 w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl">
+      <div class="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-6 py-4">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-800">
+            {{ tarea()!.nombre }}
+          </h2>
+          <p class="text-sm text-slate-500 mt-1">
+            Detalle de la tarea
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+          (click)="cerrar()">
+          ✕
+        </button>
+      </div>
+
+      <div class="p-6 space-y-6">
+
+        <!-- bloque principal -->
+        <div class="grid gap-6 lg:grid-cols-3">
+          <div class="lg:col-span-2 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <h3 class="text-lg font-semibold text-slate-800 mb-3">
+              Información general
+            </h3>
+
+            <div class="space-y-3">
+              <div>
+                <p class="text-sm font-medium text-slate-500">Nombre</p>
+                <p class="text-slate-800">{{ tarea()!.nombre }}</p>
+              </div>
+
+              <div>
+                <p class="text-sm font-medium text-slate-500">Descripción</p>
+                <p class="text-slate-800 whitespace-pre-line">
+                  {{ tarea()!.descripcion }}
+                </p>
+              </div>
+
+              <div class="grid gap-4 md:grid-cols-2">
+                <div>
+                  <p class="text-sm font-medium text-slate-500">Fecha límite</p>
+                  <p class="text-slate-800">{{ tarea()!.fechaLimite }}</p>
+                </div>
+
+                <div>
+                  <p class="text-sm font-medium text-slate-500">Fecha término real</p>
+                  <p class="text-slate-800">
+                    {{ tarea()!.fechaTerminoReal || 'Sin finalizar' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- resumen lateral -->
+          <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h3 class="text-lg font-semibold text-slate-800 mb-4">
+              Resumen
+            </h3>
+
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-slate-500">Estado</span>
+                <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+                  {{ tarea()!.estadoNombre }}
+                </span>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-slate-500">Prioridad</span>
+                <span class="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700">
+                  {{ tarea()!.prioridadNombre }}
+                </span>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-slate-500">Subtareas</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                  {{ tarea()!.subTareas.length }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- tarea padre -->
+        @if (tarea()!.tareaPadre) {
+          <div class="rounded-2xl border border-blue-200 bg-blue-50 p-5">
+            <h3 class="text-lg font-semibold text-blue-800 mb-3">
+              Tarea padre
+            </h3>
+
+            <div class="rounded-xl border border-blue-100 bg-white p-4">
+              <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <h4 class="text-lg font-medium text-slate-800">
+                    {{ tarea()!.tareaPadre!.nombre }}
+                  </h4>
+                  <p class="mt-1 text-slate-600">
+                    {{ tarea()!.tareaPadre!.descripcion }}
+                  </p>
+                </div>
+
+                <div class="flex flex-col gap-2 items-end">
+                  <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+                    {{ tarea()!.tareaPadre!.estadoNombre }}
+                  </span>
+                  <span class="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700">
+                    {{ tarea()!.tareaPadre!.prioridadNombre }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="mt-3 text-sm text-slate-500">
+                📅 {{ tarea()!.tareaPadre!.fechaLimite }}
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- subtareas -->
+        <div class="rounded-2xl border border-slate-200 bg-white p-5">
+          <div class="mb-4 flex items-center justify-between">
+            <h3 class="text-xl font-semibold text-slate-800">
+              Tareas hijas / subtareas
+            </h3>
+
+            <span class="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600">
+              {{ tarea()!.subTareas.length }} elemento(s)
+            </span>
+          </div>
+
+          @if (tarea()!.subTareas.length > 0) {
+            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              @for (subTarea of tarea()!.subTareas; track subTarea.idTarea) {
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 hover:bg-slate-100 transition">
+                  <div class="flex items-start justify-between gap-3">
+             <div class="min-w-0">
+  <h4 class="font-semibold text-slate-800">
+    {{ subTarea.nombre }}
+  </h4>
+
+ <p class="mt-1 max-w-full h-28 overflow-y-auto whitespace-pre-wrap [overflow-wrap:anywhere] rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm leading-relaxed text-slate-700 shadow-inner">
+  {{ subTarea.descripcion }}
+</p>
+</div>
+
+                    <div class="flex flex-col gap-2 items-end">
+                      <span class="rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700">
+                        {{ subTarea.estadoNombre }}
+                      </span>
+                      <span class="rounded-full bg-pink-100 px-2 py-1 text-xs font-medium text-pink-700">
+                        {{ subTarea.prioridadNombre }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-500">
+                    <span class="rounded-full border border-slate-200 bg-white px-2 py-1">
+                      📅 {{ subTarea.fechaLimite }}
+                    </span>
+
+                    @if (subTarea.fechaTerminoReal) {
+                      <span class="rounded-full bg-green-100 px-2 py-1 text-green-700">
+                        ✅ {{ subTarea.fechaTerminoReal }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-400">
+              Esta tarea no tiene subtareas.
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
